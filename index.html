@@ -5322,11 +5322,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('footerAdmBtn')?.addEventListener('click', () => {
         if (SEC && SEC.ok) {
             document.getElementById('admOv')?.classList.add('on');
-        } else if (LS.g('lp_auth')) {
-            // Solo abre login si ya existe cuenta configurada
+        } else {
             document.getElementById('loginOv')?.classList.add('on');
         }
-        // Si no hay cuenta → silencio total para visitantes
     });
 
     console.log('🚀 FranelasVE: Sistema cargado y listo.');
