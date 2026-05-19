@@ -5217,6 +5217,82 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Restaurar Event Listeners perdidos
+    $('#admX')?.addEventListener('click', () => $('#admOv').classList.remove('on'));
+
+    $$('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            $$('.tab').forEach(t => t.classList.remove('on'));
+            $$('.tc').forEach(tc => tc.classList.remove('on'));
+            tab.classList.add('on');
+            const target = tab.dataset.t;
+            if ($('#' + target)) $('#' + target).classList.add('on');
+        });
+    });
+
+    $('#qP')?.addEventListener('click', () => {
+        curQty++;
+        $('#qV').value = curQty;
+        if (curProd) $('#mAdd').textContent = `🛒 AGREGAR AL CARRITO — ${fp(curProd.pr * curQty)}`;
+    });
+
+    $('#qM')?.addEventListener('click', () => {
+        if (curQty > 1) {
+            curQty--;
+            $('#qV').value = curQty;
+            if (curProd) $('#mAdd').textContent = `🛒 AGREGAR AL CARRITO — ${fp(curProd.pr * curQty)}`;
+        }
+    });
+
+    window.addEventListener('scroll', () => {
+        const nav = $('#nav');
+        if (window.scrollY > 50) nav.classList.add('sc');
+        else nav.classList.remove('sc');
+
+        const sticky = $('#stickyB');
+        if (window.scrollY > 600) sticky.classList.add('vis');
+        else sticky.classList.remove('vis');
+    });
+
+    const ham = $('#ham'), mobM = $('#mobM'), mobOv = $('#mobOv');
+    const closeMob = () => {
+        if(ham) ham.classList.remove('on');
+        if(mobM) mobM.classList.remove('on');
+        if(mobOv) mobOv.classList.remove('on');
+        document.body.style.overflow = '';
+    };
+
+    ham?.addEventListener('click', () => {
+        ham.classList.toggle('on');
+        mobM.classList.toggle('on');
+        mobOv.classList.toggle('on');
+        document.body.style.overflow = ham.classList.contains('on') ? 'hidden' : '';
+    });
+
+    mobOv?.addEventListener('click', closeMob);
+    $$('.ml2').forEach(link => link.addEventListener('click', closeMob));
+
+    // Cambiar contraseña
+    $('#changePwBtn')?.addEventListener('click', () => {
+        if(SEC && SEC.changePw) SEC.changePw();
+    });
+
+    // Upload productos
+    const fInp = $('#fInp');
+    if (fInp) {
+        fInp.addEventListener('change', e => ADM.handleF(e.target.files));
+        const uZone = $('#uZone');
+        if (uZone) {
+            uZone.addEventListener('dragover', e => { e.preventDefault(); uZone.classList.add('dg'); });
+            uZone.addEventListener('dragleave', () => uZone.classList.remove('dg'));
+            uZone.addEventListener('drop', e => { e.preventDefault(); uZone.classList.remove('dg'); ADM.handleF(e.dataTransfer.files); });
+        }
+    }
+
+    // Upload diseños
+    const dfInp = $('#dfInp');
+    if (dfInp) dfInp.addEventListener('change', e => ADM.handleDF(e.target.files));
+
     // Inicializaciones
     ADM.loadCfg();
     ADM.initPills();
@@ -5231,14 +5307,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Modal producto
     $('#mX')?.addEventListener('click', () => SHOP.closeModal());
+    $('#mOv')?.addEventListener('click', e => { if (e.target === $('#mOv')) SHOP.closeModal(); });
     $('#mAdd')?.addEventListener('click', () => SHOP.addToCart());
 
     // Carrito
     $('#cartBtn')?.addEventListener('click', () => SHOP.openCart());
     $('#cartX')?.addEventListener('click', () => SHOP.closeCart());
+    $('#cartOv')?.addEventListener('click', () => SHOP.closeCart());
 
     // Checkout
     $('#ckX')?.addEventListener('click', () => SHOP.closeCheckout());
+    $('#ckOv')?.addEventListener('click', () => SHOP.closeCheckout());
     $('#ckSend')?.addEventListener('click', () => SHOP.sendWA());
 
     // Música y Sonido
