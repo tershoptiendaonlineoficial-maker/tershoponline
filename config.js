@@ -4,21 +4,23 @@
 
 const CONFIG = {
   // === MARCA Y GENERAL ===
-  storeName: "DIGITAL MARKET",
-  storeLogo: "PREMIUM", // Texto del logo
-  storeTagline: "Calidad Premium al Mejor Precio",
+  storeName: "Tershop Online VE",
+  storeLogo: "TERSHOP",
+  storeTagline: "Si buscas precio/calidad, ¡somos tu proveedor indicado!",
   currency: "USD",
   currencySymbol: "$",
-  whatsappNumber: "04242674477", // Cambia por tu número real
+  whatsappNumber: "584242674477",
+  whatsappDirectLink: "https://wa.me/message/OONJORDXA2NYA1",
+  siteUrl: "https://tershoponline.netlify.app/",
 
-  // === REDES SOCIALES (URLs configurables) ===
+  // === REDES SOCIALES ===
   social: {
-    instagram: "https://instagram.com/tumarca",
-    facebook: "https://facebook.com/tumarca",
-    tiktok: "https://tiktok.com/@tumarca",
-    whatsapp: `https://wa.me/1${'1234567890'}`, // Formato internacional
-    youtube: "https://youtube.com/@tumarca",
-    twitter: "https://x.com/tumarca"
+    instagram: "",
+    facebook: "https://www.facebook.com/profile.php?id=61573316013361",
+    tiktok: "https://www.tiktok.com/@tershoponline",
+    whatsapp: "https://wa.me/message/OONJORDXA2NYA1",
+    youtube: "",
+    twitter: ""
   },
 
   // === IDs DE TRACKING (PON TUS IDs REALES AQUÍ) ===
@@ -174,5 +176,7 @@ const CONFIG = {
     productsSold: 1000
   }
 };
+
+console.log('✅ Tershop Online VE — Configuración cargada correctamente.');
 
 console.log('✅ Configuración cargada:', CONFIG.storeName);
