@@ -4133,59 +4133,61 @@ const firebaseConfig = {
     databaseURL: "https://tershoponlineoficial-default-rtdb.firebaseio.com"
 };
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+let db = null;
+try {
+    db = firebase.database();
 
-let DB_PRODS = [];
-let DB_DESIGNS = [];
-let DB_CONFIG = {};
-let DB_MUSIC = null;
+    db.ref('products').on('value', snap => {
+        DB_PRODS = snap.val() || [];
+        if (typeof SHOP !== 'undefined' && SHOP.renderProds) {
+            SHOP.renderProds();
+            if (typeof ADM !== 'undefined' && ADM.rList) ADM.rList();
+        }
+    });
 
-db.ref('products').on('value', snap => {
-    DB_PRODS = snap.val() || [];
-    if (typeof SHOP !== 'undefined' && SHOP.renderProds) {
-        SHOP.renderProds();
-        if (typeof ADM !== 'undefined' && ADM.rList) ADM.rList();
-    }
-});
+    db.ref('designs').on('value', snap => {
+        DB_DESIGNS = snap.val() || [];
+        if (typeof SHOP !== 'undefined' && SHOP.renderDesigns) {
+            SHOP.renderDesigns();
+            if (typeof ADM !== 'undefined' && ADM.rDList) ADM.rDList();
+        }
+    });
 
-db.ref('designs').on('value', snap => {
-    DB_DESIGNS = snap.val() || [];
-    if (typeof SHOP !== 'undefined' && SHOP.renderDesigns) {
-        SHOP.renderDesigns();
-        if (typeof ADM !== 'undefined' && ADM.rDList) ADM.rDList();
-    }
-});
+    db.ref('config').on('value', snap => {
+        DB_CONFIG = snap.val() || {};
+        if (typeof SHOP !== 'undefined' && SHOP.applyCfg) {
+            SHOP.applyCfg();
+            if (typeof ADM !== 'undefined' && ADM.loadCfg) ADM.loadCfg();
+        }
+    });
 
-db.ref('config').on('value', snap => {
-    DB_CONFIG = snap.val() || {};
-    if (typeof SHOP !== 'undefined' && SHOP.applyCfg) {
-        SHOP.applyCfg();
-        if (typeof ADM !== 'undefined' && ADM.loadCfg) ADM.loadCfg();
-    }
-});
+    db.ref('music').on('value', snap => {
+        DB_MUSIC = snap.val() || null;
+        if (typeof MUSIC !== 'undefined' && MUSIC.init) {
+            MUSIC.init();
+        }
+    });
 
-db.ref('music').on('value', snap => {
-    DB_MUSIC = snap.val() || null;
-    if (typeof MUSIC !== 'undefined' && MUSIC.init) {
-        MUSIC.init();
-    }
-});
+    // MIGRACIÓN ÚNICA: Subir datos locales a la nube protegiendo el trabajo previo del admin
+    db.ref('migration_done').once('value').then(snap => {
+        if (!snap.val()) {
+            const lp = LS.g('lp_products');
+            if (lp && lp.length > 0) db.ref('products').set(lp);
+            
+            const lpd = LS.g('lp_designs');
+            if (lpd && lpd.length > 0) db.ref('designs').set(lpd);
+            
+            const lpc = LS.g('lp_config');
+            if (lpc && Object.keys(lpc).length > 0) db.ref('config').set(lpc);
+            
+            db.ref('migration_done').set(true);
+        }
+    }).catch(e => console.warn('MIGRATION ERROR:', e));
 
-// MIGRACIÓN ÚNICA: Subir datos locales a la nube protegiendo el trabajo previo del admin
-db.ref('migration_done').once('value').then(snap => {
-    if (!snap.val()) {
-        const lp = LS.g('lp_products');
-        if (lp && lp.length > 0) db.ref('products').set(lp);
-        
-        const lpd = LS.g('lp_designs');
-        if (lpd && lpd.length > 0) db.ref('designs').set(lpd);
-        
-        const lpc = LS.g('lp_config');
-        if (lpc && Object.keys(lpc).length > 0) db.ref('config').set(lpc);
-        
-        db.ref('migration_done').set(true);
-    }
-});
+} catch (err) {
+    console.error('🔥 ERROR CRÍTICO DE FIREBASE: La Base de Datos no ha sido creada en la consola.', err);
+    alert('ATENCIÓN ADMIN: Debes crear la "Realtime Database" en tu consola de Firebase para que los productos carguen.');
+}
 
 /* ===== SEGURIDAD (SEC) ===== */
 const SEC = {
