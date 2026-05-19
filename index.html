@@ -5298,18 +5298,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Atajos de teclado ocultos
     document.addEventListener('keydown', (e) => {
-        // Ctrl + Shift + F6 → Abrir Panel Admin (solo login, nunca setup)
+        // Ctrl + Shift + F6 → Abrir Panel Admin (login o panel directo)
         if (e.ctrlKey && e.shiftKey && !e.altKey && e.key === 'F6') {
             e.preventDefault();
             if (SEC && SEC.ok) {
                 const admOv = document.getElementById('admOv');
                 if (admOv) admOv.classList.add('on');
-            } else if (LS.g('lp_auth')) {
-                // Solo abrir login si ya hay cuenta creada
+            } else {
                 const loginOv = document.getElementById('loginOv');
                 if (loginOv) loginOv.classList.add('on');
             }
-            // Si no hay cuenta y no es el propietario → silencio total
         }
 
         // Ctrl + Shift + Alt + F9 → Atajo SECRETO del propietario para setup inicial
